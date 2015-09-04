@@ -74,9 +74,9 @@ bool LuaExporter::Export(QByteArray& out) {
     res+=p+QString(m_write_function?"},\n":"}\n");
     
     auto character_list  = fontConfig()->characters().toStdString();
-    std::regex reg(R"(\"|\\)");
-    
-    res+=p+QString("character_list=\""+QString(std::regex_replace(character_list, reg, "\\$&").c_str())+QString("\"\n"));
+    std::regex reg(R"(\"|\\)");    
+    res+=p+QString("character_list=\""
+    +QString(std::regex_replace(character_list, reg, "\\$&").c_str())+QString("\"\n"));
 
     res+=p+QString("chars={\n");
     foreach (const Symbol& c , symbols()) {
