@@ -33,6 +33,10 @@
 #include "../layoutdata.h"
 
 #include <QString>
+
+#include <string>
+#include <regex>
+
 LuaExporter::LuaExporter(bool write_function,QObject *parent) :
     AbstractExporter(parent), m_write_function(write_function)
 {
@@ -68,6 +72,11 @@ bool LuaExporter::Export(QByteArray& out) {
     res+=p+QString("\twidth=")+QString().number(texWidth())+QString(",\n");
     res+=p+QString("\theight=")+QString().number(texHeight())+QString("\n");
     res+=p+QString(m_write_function?"},\n":"}\n");
+    
+    auto character_list  = fontConfig()->characters().toStdString();
+    std::regex reg(R"(\"|\\)");
+    
+    res+=p+QString("character_list=\""+QString(std::regex_replace(character_list, reg, "\\$&").c_str())+QString("\"\n"));
 
     res+=p+QString("chars={\n");
     foreach (const Symbol& c , symbols()) {
